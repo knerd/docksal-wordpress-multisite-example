@@ -1,0 +1,10 @@
+# bloat files
+*.log
+.lh
+
+# build dirs
+vendor/
+public/*
+
+# but not configs
+!public/wp-config.php

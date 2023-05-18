@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+## Initialize stack and site (full reset)
+#
+## Usage fin init
+################################## SETTINGS 
+source ${PROJECT_ROOT}/.docksal/bin/helpers
+
+
+################################## FUNCTIONS
+# REMOVE PROJECT
+removeProject(){
+  echo-red "Remove Project"
+  fin project rm -f 
+}
+
+# START PROJECT
+startProject(){
+  echo-green-bg "Start Project..."
+  fin project start
+}
+
+installCerts(){
+  fin init/cert
+}
+
+# INSTALL PACKAGES FROM COMPOSER.JSON
+installComposer(){
+  echo-green-bg "Install Vendor Packages..."
+  fin composer install
+}
+
+# RUN WORDPRESS INIT SCRIPT
+installWP(){
+  fin init/wp -y
+}
+
+projectInfo(){
+  echo-green-bg "Project Initialized!"
+  fin info
+}
+
+init(){
+  removeProject
+  startProject
+  installCerts
+  installComposer
+  installWP
+  projectInfo
+}
+################################## END: FUNCTIONS
+
+################################## EXECUTION 
+time init

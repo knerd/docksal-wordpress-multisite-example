@@ -1,0 +1,88 @@
+version: "3.9"
+
+services:
+  # CLI Container
+  cli:
+    volumes:
+      # Project root volume
+      - project_root:/app:rw,nocopy,cached
+    environment:
+      # Pass additional variables (used in custom commands, e.g. install) from host to cli
+      - DOCKSAL_STACK
+      - DOCROOT
+      - MYSQL_DATABASE
+      - MYSQL_PREFIX
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD
+      - WP_ADMIN_EMAIL
+      - WP_ADMIN_USER
+      - WP_ADMIN_PASS
+      - WP_CONTENT
+      - VIRTUAL_HOST
+    # Map local host machine's ports to cli's container ports
+    # ports:
+    #   # BrowserSync & UI
+    #   - '3000:3000'
+    #   - '3001:3001'
+
+  # Database Container
+  db:
+    volumes:
+      # Auto imports *.sql and *.sql.gz files found in /data dir.
+      - ${PROJECT_ROOT}/data:/docker-entrypoint-initdb.d:ro
+
+  # PHPMyAdmin Container
+  pma:
+    image: phpmyadmin/phpmyadmin
+    hostname: pma
+    environment:
+      # Use db Container as host
+      - PMA_HOST=db
+      # Pass the user credentials
+      - PMA_USER=${MYSQL_USER}
+      - PMA_PASSWORD=${MYSQL_PASSWORD}
+    labels:
+      # Virtual Host: pma.$VIRTUAL_HOST
+      - io.docksal.virtual-host=pma.${VIRTUAL_HOST}
+
+  # Web Container
+  web:
+    volumes:
+      # Map project root volume to /app 
+      - project_root:/app:rw,nocopy,cached
+      # - uploads:/uploads:rw,nocopy,cached
+    depends_on:
+      - cli
+      - db
+    # uncomment to enable nginx
+    environment:
+      # Tell NGINX where the DOCROOT is.
+      - NGINX_SERVER_ROOT=/app/${DOCROOT}
+      # NGINX preset for WordPress
+      - NGINX_VHOST_PRESET=wordpress
+      # Tell NGINX to use the cli as backend
+      - NGINX_BACKEND_HOST=cli
+      - NGINX_FCGI_HOST_PORT=cli:9000
+
+  # Redis
+  redis:
+    extends:
+      file: ${HOME}/.docksal/stacks/services.yml
+      service: redis
+
+volumes:
+  project_root:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PROJECT_ROOT}
+      o: bind
+  # uploads:
+  #   driver: local
+  #   driver_opts:
+  #     type: none
+  #     device: "/mnt/chromeos/MyFiles/Project Files/vi/muuvlabs/barmethod/public_html/wp-content/uploads"
+  #     o: bind
+  # docksal_ssh_agent:
+  #   external: true

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+## Display project info
+################################## SETTINGS 
+source ${PROJECT_ROOT}/.docksal/bin/helpers
+
+################################## FUNCTIONS
+info(){
+  echo-yellow "${LOGO}" 
+  echo-green "${green}Project URL: ${yellow}https://${VIRTUAL_HOST}" 
+}
+################################## END: FUNCTIONS
+
+################################## EXECUTION 
+info

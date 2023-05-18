@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+## Install WordPress, Activate Plugins, Optimize setup
+#
+## Usage fin init/wp
+
+#-------------------------- Helper functions --------------------------------
+  source ${PROJECT_ROOT}/.docksal/bin/helpers
+#-------------------------- END: Helper functions --------------------
+
+#-------------------------- SETTINGS --------------------------------
+HOST=$(fin config get VIRTUAL_HOST)
+TITLE="Docksal WordPress Example"
+ADMIN=knerd
+EMAIL=contact@midnightnerd.com
+PASS=password
+#-------------------------- END: SETTINGS --------------------------------
+
+#-------------------------- FUNCTIONS --------------------------------
+  function wpCoreInstall(){
+    # INSTALL WORDPRESS
+    echo-green-bg "Install WordPress..."
+    fin wp core install --url="${HOST}" --title="${TITLE}" --admin_user="${ADMIN}" --admin_email="${EMAIL}" --admin_password="${PASS}"
+  }
+
+  function optimizeWP(){
+    # ACTIVATE PLUGINS 
+    echo-green-bg "Activate Plugins..."
+    fin wp plugin activate redis-cache index-wp-mysql-for-speed
+
+    echo-green-bg "Enable Redis..."
+    # ENABLE REDIS CACHE
+    fin wp redis enable
+    fin wp redis status 
+
+    echo-green-bg "Optimize DB..."
+    # OPTIMIZE DB W/ HIGH PERFORMANCE KEYS
+    fin wp index-mysql enable --all 
+    fin wp index-mysql status 
+  }
+#-------------------------- END: FUNCTIONS --------------------------------
+
+#-------------------------- EXECUTION --------------------------------
+  Q="Do you want to run WordPress core install"
+  askYN "$Q" wpCoreInstall 
+
+  Q="Do you want to optimize WordPress"
+  askYN "$Q" optimizeWP 
+#-------------------------- END: EXECUTION --------------------------------

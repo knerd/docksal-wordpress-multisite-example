@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+## Install mkcert, create signed cert, trust cert 
+#
+## Usage fin init/cert
+
+#-------------------------- HELPER FUNCTIONS --------------------------------
+  source ${PROJECT_ROOT}/.docksal/bin/helpers
+#-------------------------- END: HELPER FUNCTIONS --------------------
+
+#-------------------------- FUNCTIONS --------------------------------
+  function installCert(){
+    echo-green-bg "Install Certificate..."
+    fin debug -c 'mkdir -p ${CONFIG_CERTS}; mkcert -key-file ${CONFIG_CERTS}/${VIRTUAL_HOST}.key -cert-file ${CONFIG_CERTS}/${VIRTUAL_HOST}.crt *.${VIRTUAL_HOST} ${VIRTUAL_HOST}'
+  }
+#-------------------------- END: FUNCTIONS --------------------------------
+
+#-------------------------- EXECUTION --------------------------------
+  installCert
+#-------------------------- END: EXECUTION --------------------------------

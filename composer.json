@@ -1,0 +1,61 @@
+{
+  "name": "knerd/docksal-wordpress-example",
+  "description": "Example config utilizing composer and docksal to create a running local WP environment",
+  "version": "1.1.0",
+  "type": "project",
+  "authors": [{
+    "name": "xophz",
+    "email": "contact@midnightnerd.com"
+  }],
+  "minimum-stability": "dev",
+  "require": {
+    "johnpbloch/wordpress": "^6.2.1",
+    "johnpbloch/wordpress-core": "6.2.1",
+    "knerd/wp-config": "^1.0",
+    "wpackagist-plugin/index-wp-mysql-for-speed": "^1",
+    "wpackagist-plugin/redis-cache": "^2",
+    "wpackagist-theme/twentytwentythree": "^1.1"
+  },
+  "repositories": {
+    "wpackagist": {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    },
+    "knerd/wp-config":{
+      "type": "vcs",
+      "url": "https://github.com/knerd/wp-config"
+    }
+  },
+  "extra": {
+    "wordpress-install-dir": "public/wp",
+    "installer-paths": {
+      "public/wp-content/plugins/{$name}": [
+        "type:wordpress-plugin"
+      ],
+      "public/wp-content/themes/{$name}": [
+        "type:wordpress-theme"
+      ]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "johnpbloch/wordpress-core-installer": true,
+      "koodimonni/composer-dropin-installer": true
+    },
+    "preferred-install": {
+        "knerd/*": "source",
+        "*": "dist"
+    }
+  },
+  "scripts": {
+    "post-update-cmd": "@move-wp",
+    "post-install-cmd": "@move-wp",
+    "move-wp": [
+      "# WordPress installed to public/wp - moving to public/...",
+      "rm public/wp/wp-content -rf",
+      "rsync -ra --remove-source-files public/wp/* ./public",
+      "rm public/wp -rf"
+    ]
+  }
+}
