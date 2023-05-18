@@ -14,7 +14,8 @@
     "knerd/wp-config": "^1.0",
     "wpackagist-plugin/index-wp-mysql-for-speed": "^1",
     "wpackagist-plugin/redis-cache": "^2",
-    "wpackagist-theme/twentytwentythree": "^1.1"
+    "wpackagist-theme/twentytwentythree": "^1.1",
+    "wpackagist-plugin/wordpress-mu-domain-mapping":"0.5.5.1"
   },
   "repositories": {
     "wpackagist": {
@@ -29,6 +30,9 @@
   "extra": {
     "wordpress-install-dir": "public/wp",
     "installer-paths": {
+      "public/wp-content/mu-plugins/{$name}": [
+        "type:wordpress-muplugin"
+      ],
       "public/wp-content/plugins/{$name}": [
         "type:wordpress-plugin"
       ],
@@ -53,6 +57,7 @@
     "post-install-cmd": "@move-wp",
     "move-wp": [
       "# WordPress installed to public/wp - moving to public/...",
+      "cp public/wp-content/plugins/wordpress-mu-domain-mapping/sunrise.php public/wp-content/",
       "rm public/wp/wp-content -rf",
       "rsync -ra --remove-source-files public/wp/* ./public",
       "rm public/wp -rf"

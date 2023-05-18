@@ -4,6 +4,7 @@
 
 
   $table_prefix = 'wp_';
+  $base = '/';                                                                                                                                                                                                     
 
   /**
    * WP_Config
@@ -13,11 +14,21 @@
 
   new WP_Config([
     // CONFIG SCHEME & FILE STRUCTURE
-    'SITE_SCHEME'           => 'https',       //* WORDPRESS SITE SCHEME
+    'SITE_SCHEME'           => 'http',       //* WORDPRESS SITE SCHEME
     'DIR'                   => __DIR__,       //* PROJECT DIRECTORY
     'DOCROOT'               => 'public',      //* PUBLIC DIRECTORY
     'WP_DIR'                => '',            //* BLANK UNLESS WORDPRESS IS IN SUB DIRECTORY
     'WP_CONTENT'            => 'wp-content',  //* WORDPRESS CONTENT DIRECTORY
+
+    // MULTISITE
+    'WP_ALLOW_MULTISITE'    => true,
+    'MULTISITE'             => true,
+    'SUBDOMAIN_INSTALL'     => true,
+    'DOMAIN_CURRENT_SITE'   => getenv('VIRTUAL_HOST') ?: $_SERVER['SERVER_NAME'],
+    'PATH_CURRENT_SITE'     => '/',
+    'SITE_ID_CURRENT_SITE'  => 1,
+    'BLOG_ID_CURRENT_SITE'  => 1,
+    'SUNRISE' => 'on',
 
     // DATABASE SETTINGS
     'DB_NAME'               => 'default',
@@ -29,8 +40,8 @@
     'DB_PREFIX'             => $table_prefix,
 
     // SECURITY
-    'FORCE_SSL_LOGIN'       => true,
-    'FORCE_SSL_ADMIN'       => true,
+    // 'FORCE_SSL_LOGIN'       => true,
+    // 'FORCE_SSL_ADMIN'       => true,
 
     // PERFORMANCE
     'WP_MEMORY_LIMIT'       => '128M',

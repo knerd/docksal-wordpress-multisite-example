@@ -41,8 +41,8 @@ projectInfo(){
 
 init(){
   removeProject
-  startProject
   installCerts
+  startProject
   installComposer
   installWP
   projectInfo

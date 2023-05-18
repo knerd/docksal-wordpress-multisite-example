@@ -19,7 +19,7 @@ PASS=password
   function wpCoreInstall(){
     # INSTALL WORDPRESS
     echo-green-bg "Install WordPress..."
-    fin wp core install --url="${HOST}" --title="${TITLE}" --admin_user="${ADMIN}" --admin_email="${EMAIL}" --admin_password="${PASS}"
+    fin wp core multisite-install --url="${HOST}" --title="${TITLE}" --admin_user="${ADMIN}" --admin_email="${EMAIL}" --admin_password="${PASS}"
   }
 
   function optimizeWP(){
